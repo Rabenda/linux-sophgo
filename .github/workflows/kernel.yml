@@ -25,6 +25,7 @@ jobs:
       ARCH: riscv
       KBUILD_BUILD_USER: riscv
       KBUILD_BUILD_HOST: riscv-builder
+      KDEB_COMPRESS: xz
 
     steps:
       - name: Checkout
@@ -37,7 +38,8 @@ jobs:
               sudo apt update && \
               sudo apt install -y gdisk dosfstools g++-12-riscv64-linux-gnu build-essential \
                                   libncurses-dev gawk flex bison openssl libssl-dev tree \
-                                  dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf device-tree-compiler
+                                  dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf \
+                                  device-tree-compiler xz-utils
               sudo update-alternatives --install \
                   /usr/bin/riscv64-linux-gnu-gcc riscv64-gcc /usr/bin/riscv64-linux-gnu-gcc-12 10
               sudo update-alternatives --install \
@@ -55,7 +57,7 @@ jobs:
                 if [[ ${{ matrix.name }} = "thead-gcc" ]]; then
                   echo "vector kernel"
                   echo "CONFIG_VECTOR=y" >> .config
-                  echo "CONFIG_RISCV_ISA_THEAD=y" >> .config
+                  echo "CONFIG_THEAD_ISA=y" >> .config
                   cat .config
                 else
                   echo "non-vector kernel"
